@@ -3,19 +3,55 @@ import { useState } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from './components/LoadingSpinner'
+import FormInput from './components/FormInput'
+import { validateForm } from './utils/validation'
 
 const CreateUsers = () => {
-  const [name,setName]=useState();
-  const [email,setEmail]=useState();
-  const [age,setAge]=useState();
+  const [name,setName]=useState('');
+  const [email,setEmail]=useState('');
+  const [age,setAge]=useState('');
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const navigate=useNavigate();
 
+  const handleFieldChange = (field, value) => {
+    // Update the field value
+    if (field === 'name') setName(value);
+    if (field === 'email') setEmail(value);
+    if (field === 'age') setAge(value);
+
+    // Mark field as touched
+    setTouched(prev => ({ ...prev, [field]: true }));
+
+    // Validate the form and update errors
+    const formData = {
+      name: field === 'name' ? value : name,
+      email: field === 'email' ? value : email,
+      age: field === 'age' ? value : age
+    };
+    
+    const validation = validateForm(formData);
+    setErrors(validation.errors);
+  };
+
   const submit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    
+    // Mark all fields as touched
+    setTouched({ name: true, email: true, age: true });
+    
+    // Validate form
+    const validation = validateForm({ name, email, age });
+    setErrors(validation.errors);
+    
+    if (!validation.isValid) {
+      return;
+    }
+    
     setLoading(true);
     axios.post('http://localhost:3001/createuser',
-      {name,email,age})
+      {name: name.trim(), email: email.trim(), age: parseInt(age)})
       .then(res => {
         console.log(res);
         setLoading(false);
@@ -24,45 +60,60 @@ const CreateUsers = () => {
       .catch(err => {
         console.log(err);
         setLoading(false);
+        // Handle server errors
+        if (err.response && err.response.data && err.response.data.message) {
+          setErrors({ server: [err.response.data.message] });
+        } else {
+          setErrors({ server: ['An error occurred while creating the user'] });
+        }
       })
   }
 
   return (
     <div className="container mt-4">
       <h2>Create New User</h2>
+      
+      {errors.server && (
+        <div className="alert alert-danger" role="alert">
+          {errors.server.map((error, index) => (
+            <div key={index}>{error}</div>
+          ))}
+        </div>
+      )}
+      
       <form onSubmit={submit}>
-        <div className="form-group mb-3">
-          <label htmlFor="name">Name</label>
-          <input
-            onChange={ (e) => setName(e.target.value)}
-            type="text"
-            className="form-control"
-            placeholder="Name"
-            required
-          />
-        </div>
+        <FormInput
+          label="Name"
+          type="text"
+          name="name"
+          value={name}
+          onChange={(e) => handleFieldChange('name', e.target.value)}
+          placeholder="Enter your name"
+          required={true}
+          errors={touched.name ? errors.name : []}
+        />
 
-        <div className="form-group mb-3">
-          <label htmlFor="email">Email</label>
-          <input
-            onChange={ (e) => setEmail(e.target.value)}
-            type="email"
-            className="form-control"
-            placeholder="Email"
-            required
-          />
-        </div>
+        <FormInput
+          label="Email"
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => handleFieldChange('email', e.target.value)}
+          placeholder="Enter your email"
+          required={true}
+          errors={touched.email ? errors.email : []}
+        />
 
-        <div className="form-group mb-3">
-          <label htmlFor="age">Age</label>
-          <input
-            onChange={ (e) => setAge(e.target.value)}
-            type="number"
-            className="form-control"
-            placeholder="Age"
-            required
-          />
-        </div>
+        <FormInput
+          label="Age"
+          type="number"
+          name="age"
+          value={age}
+          onChange={(e) => handleFieldChange('age', e.target.value)}
+          placeholder="Enter your age"
+          required={true}
+          errors={touched.age ? errors.age : []}
+        />
 
         <button 
           type="submit" 
@@ -75,8 +126,17 @@ const CreateUsers = () => {
               Creating...
             </>
           ) : (
-            'Submit'
+            'Create User'
           )}
+        </button>
+        
+        <button 
+          type="button" 
+          className="btn btn-secondary ms-2"
+          onClick={() => navigate('/')}
+          disabled={loading}
+        >
+          Cancel
         </button>
       </form>
       
