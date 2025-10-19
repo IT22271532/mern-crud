@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingSpinner from './components/LoadingSpinner'
 import FormInput from './components/FormInput'
 import { validateForm } from './utils/validation'
+import { useToast } from './context/ToastContext'
 
 const CreateUsers = () => {
   const [name,setName]=useState('');
@@ -14,6 +15,7 @@ const CreateUsers = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const navigate=useNavigate();
+  const { showSuccess, showError } = useToast();
 
   const handleFieldChange = (field, value) => {
     // Update the field value

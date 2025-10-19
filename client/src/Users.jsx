@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import LoadingSpinner from './components/LoadingSpinner'
 import ConfirmationModal from './components/ConfirmationModal'
+import { useToast } from './context/ToastContext'
 
 const Users = () => {
   const [users, setUser] = useState([]);
@@ -11,6 +12,7 @@ const Users = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const { showSuccess, showError } = useToast();
 
   useEffect(() => {
     setLoading(true);
@@ -18,12 +20,14 @@ const Users = () => {
       .then(result => {
         setUser(result.data);
         setLoading(false);
+        showSuccess('Users loaded successfully!');
       })
       .catch(err => {
         console.log(err);
         setLoading(false);
+        showError('Failed to load users. Please try again.');
       })
-  },[])
+  },[showSuccess, showError])
 
   const openDeleteModal = (user) => {
     setUserToDelete(user);
@@ -44,12 +48,13 @@ const Users = () => {
       setUser(result.data);
       setDeleteLoading(false);
       closeDeleteModal();
-      // Instead of window.location.reload(), we update the state
+      showSuccess(`User "${userToDelete.name}" has been deleted successfully!`);
     })
     .catch(err => {
       console.log(err);
       setDeleteLoading(false);
       closeDeleteModal();
+      showError('Failed to delete user. Please try again.');
     })
   }
 
