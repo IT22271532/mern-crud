@@ -11,11 +11,13 @@ function App() {
 
   return (
     <div>
-
+    <BrowserRouter>
+    <Routes>
       <Route path="/" element={<Users/>} />
       <Route path="/createuser" element={<CreateUsers/>} />
       <Route path="/updateuser/:id" element={<UpdateUsers/>} />
-
+    </Routes>
+    </BrowserRouter>
     </div>
   )
 }
