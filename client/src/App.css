@@ -1,20 +1,233 @@
 @import "tailwindcss";
+/* Global App Styles */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: all 0.3s ease;
 }
 
+/* Theme Variables */
+:root,
+[data-theme="light"] {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  
+  /* Background colors */
+  --bg-color: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  
+  /* Text colors */
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --text-light: #495057;
+  
+  /* Border colors */
+  --border-color: #dee2e6;
+  --border-light: #e9ecef;
+  
+  /* Component specific */
+  --card-bg: #ffffff;
+  --card-border: #rgba(0,0,0,.125);
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-focus: #80bdff;
+  
+  /* Shadows */
+  --shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075);
+  --shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  --shadow-lg: 0 1rem 3rem rgba(0,0,0,.175);
+}
+
+[data-theme="dark"] {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+  --success-color: #198754;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #0dcaf0;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  
+  /* Background colors */
+  --bg-color: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  
+  /* Text colors */
+  --text-color: #f8f9fa;
+  --text-muted: #adb5bd;
+  --text-light: #ced4da;
+  
+  /* Border colors */
+  --border-color: #495057;
+  --border-light: #6c757d;
+  
+  /* Component specific */
+  --card-bg: #2d2d2d;
+  --card-border: rgba(255,255,255,.125);
+  --input-bg: #2d2d2d;
+  --input-border: #495057;
+  --input-focus: #0d6efd;
+  
+  /* Shadows */
+  --shadow-sm: 0 .125rem .25rem rgba(0,0,0,.3);
+  --shadow: 0 .5rem 1rem rgba(0,0,0,.4);
+  --shadow-lg: 0 1rem 3rem rgba(0,0,0,.5);
+}
+
+/* Global body styling */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Override Bootstrap styles for dark theme */
+.container {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Table styling */
+.table {
+  --bs-table-bg: var(--card-bg);
+  --bs-table-border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.table > :not(caption) > * > * {
+  border-bottom-color: var(--border-color);
+}
+
+/* Form controls */
+.form-control {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-color);
+}
+
+.form-control:focus {
+  background-color: var(--input-bg);
+  border-color: var(--input-focus);
+  color: var(--text-color);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+  color: var(--text-color);
+}
+
+/* Button variants */
+.btn-primary {
+  --bs-btn-bg: var(--primary-color);
+  --bs-btn-border-color: var(--primary-color);
+  --bs-btn-hover-bg: #0056b3;
+  --bs-btn-hover-border-color: #004085;
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--danger-color);
+  --bs-btn-border-color: var(--danger-color);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--success-color);
+  --bs-btn-border-color: var(--success-color);
+}
+
+.btn-warning {
+  --bs-btn-bg: var(--warning-color);
+  --bs-btn-border-color: var(--warning-color);
+  --bs-btn-color: #000;
+}
+
+.btn-secondary {
+  --bs-btn-bg: var(--secondary-color);
+  --bs-btn-border-color: var(--secondary-color);
+}
+
+/* Alert styling */
+.alert {
+  border: 1px solid;
+}
+
+.alert-success {
+  background-color: var(--success-bg, #d4edda);
+  border-color: var(--success-color);
+  color: var(--success-color);
+}
+
+.alert-danger {
+  background-color: var(--error-bg, #f8d7da);
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+/* Card styling */
+.card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.card-header {
+  background-color: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+/* Modal styling for dark theme */
+.modal-content {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.modal-header {
+  border-bottom-color: var(--border-color);
+}
+
+.modal-footer {
+  border-top-color: var(--border-color);
+}
+
+/* Loading spinner updates */
+.spinner-border {
+  color: var(--primary-color);
+}
+
+/* Smooth transitions for all elements */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Legacy styles maintained */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -34,10 +247,6 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
-
 .read-the-docs {
-  color: #888;
+  color: var(--text-muted);
 }
