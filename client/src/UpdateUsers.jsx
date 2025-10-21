@@ -5,7 +5,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from './components/LoadingSpinner'
 import FormInput from './components/FormInput'
+import ThemeToggle from './components/ThemeToggle'
 import { validateForm } from './utils/validation'
+import { useToast } from './context/ToastContext'
 
 
 const UpdateUsers = () => {
@@ -18,6 +20,7 @@ const UpdateUsers = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const navigate=useNavigate();
+  const { showSuccess, showError } = useToast();
 
   useEffect(() => {
     setLoading(true);
@@ -32,9 +35,11 @@ const UpdateUsers = () => {
       .catch(err => {
         console.log(err);
         setLoading(false);
-        setErrors({ server: ['Failed to load user data'] });
+        const errorMsg = 'Failed to load user data';
+        setErrors({ server: [errorMsg] });
+        showError(errorMsg);
       })
-  },[id])
+  },[id, showError])
 
   const handleFieldChange = (field, value) => {
     // Update the field value
@@ -76,6 +81,7 @@ const UpdateUsers = () => {
       .then(res => {
         console.log(res);
         setUpdateLoading(false);
+        showSuccess(`User "${name.trim()}" has been updated successfully!`);
         navigate('/');
       })
       .catch(err => {
@@ -84,8 +90,11 @@ const UpdateUsers = () => {
         // Handle server errors
         if (err.response && err.response.data && err.response.data.message) {
           setErrors({ server: [err.response.data.message] });
+          showError(err.response.data.message);
         } else {
-          setErrors({ server: ['An error occurred while updating the user'] });
+          const errorMsg = 'An error occurred while updating the user';
+          setErrors({ server: [errorMsg] });
+          showError(errorMsg);
         }
       })
   };
@@ -93,7 +102,10 @@ const UpdateUsers = () => {
 
   return (
     <div className="container mt-4">
-      <h2>Update User</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>Update User</h2>
+        <ThemeToggle />
+      </div>
       
       {errors.server && (
         <div className="alert alert-danger" role="alert">
