@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import LoadingSpinner from './components/LoadingSpinner'
 import ConfirmationModal from './components/ConfirmationModal'
+import ThemeToggle from './components/ThemeToggle'
 import { useToast } from './context/ToastContext'
 
 const Users = () => {
@@ -61,9 +62,19 @@ const Users = () => {
 
   return (
     <div className="container">
-      <h2>Users Data is displaying and also this is the testing purpose change onsasasalysasass</h2>
-      <p>Users Data Displaying</p>
-      <Link to="/createuser" className="btn btn-warning">Add+</Link>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2>User Management</h2>
+          <p className="mb-0">Manage your users efficiently</p>
+        </div>
+        <ThemeToggle />
+      </div>
+      
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <Link to="/createuser" className="btn btn-primary">
+          <i className="fas fa-plus me-2"></i>Add User
+        </Link>
+      </div>
       
       {loading ? (
         <LoadingSpinner size="large" message="Loading users..." />

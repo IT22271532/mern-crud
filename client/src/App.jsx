@@ -5,23 +5,26 @@ import Users from './Users'
 import CreateUsers from './CreateUsers'
 import UpdateUsers from './UpdateUsers'
 import { ToastProvider } from './context/ToastContext'
+import { ThemeProvider } from './context/ThemeContext'
 
 
 function App() {
  
 
   return (
-    <ToastProvider>
-      <div>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Users/>} />
-            <Route path="/createuser" element={<CreateUsers/>} />
-            <Route path="/updateuser/:id" element={<UpdateUsers/>} />
-          </Routes>
-        </BrowserRouter>
-      </div>
-    </ToastProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <div>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Users/>} />
+              <Route path="/createuser" element={<CreateUsers/>} />
+              <Route path="/updateuser/:id" element={<UpdateUsers/>} />
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </ToastProvider>
+    </ThemeProvider>
   )
 }
 

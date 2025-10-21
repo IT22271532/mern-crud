@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from './components/LoadingSpinner'
 import FormInput from './components/FormInput'
+import ThemeToggle from './components/ThemeToggle'
 import { validateForm } from './utils/validation'
 import { useToast } from './context/ToastContext'
 
@@ -57,6 +58,7 @@ const CreateUsers = () => {
       .then(res => {
         console.log(res);
         setLoading(false);
+        showSuccess(`User "${name.trim()}" has been created successfully!`);
         navigate('/');
       })
       .catch(err => {
@@ -65,15 +67,21 @@ const CreateUsers = () => {
         // Handle server errors
         if (err.response && err.response.data && err.response.data.message) {
           setErrors({ server: [err.response.data.message] });
+          showError(err.response.data.message);
         } else {
-          setErrors({ server: ['An error occurred while creating the user'] });
+          const errorMsg = 'An error occurred while creating the user';
+          setErrors({ server: [errorMsg] });
+          showError(errorMsg);
         }
       })
   }
 
   return (
     <div className="container mt-4">
-      <h2>Create New User</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>Create New User</h2>
+        <ThemeToggle />
+      </div>
       
       {errors.server && (
         <div className="alert alert-danger" role="alert">
